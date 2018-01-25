@@ -90,19 +90,8 @@ echo "Installing dependencies..."
 sudo apt-get install -y libgstreamer1.0-dev gstreamer1.0-tools libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev libyaml-cpp-dev
 
 cd $HOME
-# REVIEW alexeyk: replace with sudo apt-get install -y ros-kinetic-camera-info-manager ros-kinetic-camera-calibration-parsers ros-kinetic-image-transport
-if [ ! -d "$HOME/image_common" ]; then
-    echo "Cloning image_common sources..."
-    git clone https://github.com/ros-perception/image_common.git
-    # Create symlinks to catkin workspace.
-    ln -s $HOME/image_common/camera_calibration_parsers $CATKIN_WS/src/
-    ln -s $HOME/image_common/camera_info_manager $CATKIN_WS/src/
-    ln -s $HOME/image_common/image_transport $CATKIN_WS/src/
-else
-    echo "Updating image_common sources..."
-    cd image_common
-    git pull
-fi
+# Install gscam dependencies.
+sudo apt-get install -y ros-kinetic-camera-info-manager ros-kinetic-camera-calibration-parsers ros-kinetic-image-transport
 
 cd $HOME
 if [ ! -d "$HOME/gscam" ]; then

@@ -7,7 +7,7 @@
 #include <ros/ros.h>
 #include <NvInfer.h>
 #include <opencv2/opencv.hpp>
-#include <opencv2/gpu/gpu.hpp>
+#include <opencv2/core/cuda.hpp>
 
 namespace caffe_ros
 {
@@ -109,9 +109,9 @@ protected:
 
     cv::Mat in_h_;
     cv::Mat in_final_h_;
-    // cv::gpu::GpuMat m_inOrigD;
-    // cv::gpu::GpuMat m_inD;
-    cv::gpu::GpuMat in_d_;
+    // cv::cuda::GpuMat m_inOrigD;
+    // cv::cuda::GpuMat m_inD;
+    cv::cuda::GpuMat in_d_;
     float* out_h_ = nullptr;
     float* out_d_ = nullptr;
 

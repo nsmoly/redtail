@@ -5,8 +5,6 @@
 #include <NvInfer.h>
 #include <NvCaffeParser.h>
 #include <cuda_runtime.h>
-#include <opencv2/opencv.hpp>
-#include <opencv2/gpu/gpu.hpp>
 #include <cublas_v2.h>
 #include "caffe_ros/tensor_net.h"
 
@@ -184,8 +182,8 @@ void TensorNet::loadNetwork(ConstStr& prototxt_path, ConstStr& model_path,
     int iinp = engine_->getBindingIndex(input_blob.c_str());
     in_dims_ = DimsToCHW(engine_->getBindingDimensions(iinp));
     ROS_INFO("Input : (W:%4u, H:%4u, C:%4u).", in_dims_.w(), in_dims_.h(), in_dims_.c());
-    //cv::gpu::ensureSizeIsEnough(in_dims_.h(), in_dims_.w(), CV_8UC3, in_d_);
-    in_d_ = cv::gpu::createContinuous(in_dims_.c(), in_dims_.w() * in_dims_.h(), CV_32FC1);
+    //cv::cuda::ensureSizeIsEnough(in_dims_.h(), in_dims_.w(), CV_8UC3, in_d_);
+    in_d_ = cv::cuda::createContinuous(in_dims_.c(), in_dims_.w() * in_dims_.h(), CV_32FC1);
     assert(in_d_.isContinuous());
     
     int iout  = engine_->getBindingIndex(output_blob.c_str());
@@ -261,15 +259,15 @@ void TensorNet::forward(const unsigned char* input, size_t w, size_t h, size_t c
     // GPU version:
     // in_orig_d_.upload(cv::Mat((int)h, (int)w, CV_8UC3, (void*)input));
     // // Resize to input layer size.
-    // cv::gpu::resize(in_orig_d_, in_d_, cv::Size(in_dims_.w(), in_dims_.h()), 0, 0, cv::INTER_CUBIC);
+    // cv::cuda::resize(in_orig_d_, in_d_, cv::Size(in_dims_.w(), in_dims_.h()), 0, 0, cv::INTER_CUBIC);
     // // Convert to floating point type.
     // in_d_.convertTo(in_f_d_, CV_32FC3);
     // // Subtract shift.
     // // REVIEW alexeyk: should be configurable as some models already have this in prototxt.
-    // cv::gpu::subtract(in_f_d_, 128.0f, in_f_d_);
+    // cv::cuda::subtract(in_f_d_, 128.0f, in_f_d_);
     // // Transpose to get CHW format.
     // ROS_DEBUG("in_f_d_: %zu", in_f_d_.elemSize());
-    // cv::gpu::transpose(in_f_d_, in_f_d_);
+    // cv::cuda::transpose(in_f_d_, in_f_d_);
 
     // cv::Mat cpuM;
     // in_d_.download(cpuM);
